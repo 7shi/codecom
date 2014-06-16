@@ -37,9 +37,9 @@
 
 <script type="text/javascript">
 var body = document.getElementById("body");
-
+var backs = [ "#f0f0f0", "#e0e0ff" ];
 var lines = readFile("test.md").split('\n');
-var div, code, svg, comdiv, iscode;
+var div, code, svg, comdiv, iscode, backno = 0;
 for (var i = 0; i <= lines.length; ++i) {
 	if (i == lines.length || lines[i] == "") {
 		if (div) {
@@ -67,16 +67,19 @@ for (var i = 0; i <= lines.length; ++i) {
 		div.appendChild(comdiv);
 
 		iscode = true;
+		backno = 0;
 	}
 	var line = lines[i];
 	if (line == "----") {
 		iscode = !iscode;
+		if (iscode) backno = 1 - backno;
 	} else if (!iscode && line.substring(0, 2) == "//") {
 		// skip
 	} else {
 		if (iscode) {
 			var linediv = document.createElement("div");
 			linediv.innerHTML = line;
+			linediv.style.backgroundColor = backs[backno];
 			code.appendChild(linediv);
 		} else {
 			var comment = document.createElement("div");
