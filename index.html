@@ -25,7 +25,7 @@
 	width: 6%;
 	margin: 1px;
 }
-.comdiv {
+.comments {
 	width: 46%;
 	float: left;
 }
@@ -51,7 +51,7 @@ var body = document.getElementById("body"),
 				sl,
 				linediv,
 			svg,
-			comdiv,
+			comments,
 				comment;
 var arrows = []
 
@@ -67,21 +67,21 @@ var iscode, backno = 0;
 
 function addArrow() {
 	if (!sl || !comment) return;
-	var h = max(code.clientHeight, comdiv.clientHeight);
+	var h = max(code.clientHeight, comments.clientHeight);
 	svg.setAttribute("height", h + "px");
 	var arr = document.createElementNS("http://www.w3.org/2000/svg", "path");
 	arr.setAttribute("stroke", "black");
 	arr.setAttribute("marker-end", "url(#arrow)");
-	arr.layout = function(comdiv, code, comment, sl, linediv) {
+	arr.layout = function(comments, code, comment, sl, linediv) {
 		return function() {
-			var x1 = comdiv.offsetLeft - (code.offsetLeft + code.offsetWidth) - 3;
+			var x1 = comments.offsetLeft - (code.offsetLeft + code.offsetWidth) - 3;
 			var y1 = (comment.offsetTop + comment.offsetHeight / 2) | 0;
 			var y2 = ((sl.offsetTop + (linediv.offsetTop + linediv.offsetHeight)) / 2) | 0;
 			y1 -= code.offsetTop;
 			y2 -= code.offsetTop;
 			arr.setAttribute("d", "M" + x1 + "," + y1 + " L0," + y2);
 		};
-	}(comdiv, code, comment, sl, linediv);
+	}(comments, code, comment, sl, linediv);
 	arr.layout();
 	svg.appendChild(arr);
 	arrows.push(arr);
@@ -105,9 +105,9 @@ for (var i = 0; i <= lines.length; ++i) {
 		svg.setAttribute("class", "arrow");
 		div.appendChild(svg);
 
-		comdiv = document.createElement("div");
-		comdiv.className = "comdiv";
-		div.appendChild(comdiv);
+		comments = document.createElement("div");
+		comments.className = "comments";
+		div.appendChild(comments);
 
 		iscode = true;
 		backno = 0;
@@ -133,7 +133,7 @@ for (var i = 0; i <= lines.length; ++i) {
 			comment = document.createElement("div");
 			comment.className = "comment";
 			comment.innerHTML = line;
-			comdiv.appendChild(comment);
+			comments.appendChild(comment);
 			if (sl) addArrow();
 		}
 	}
