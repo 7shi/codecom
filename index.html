@@ -115,7 +115,7 @@ for (var i = 0; i <= lines.length; ++i) {
 		backno = 0;
 		linediv = sl = null;
 	}
-	var line = lines[i];
+	var line = escape(lines[i]);
 	if (line == "----") {
 		if (iscode) {
 			comment = null;
@@ -145,6 +145,13 @@ for (var i = 0; i <= lines.length; ++i) {
 			comment.appendChild(comdiv);
 		}
 	}
+}
+
+function escape(line) {
+	return line
+		.replace("&", "&amp;")
+		.replace("<", "&lt;")
+		.replace(">", "&gt;");
 }
 
 function max(a, b) {
