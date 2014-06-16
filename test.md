@@ -1,20 +1,50 @@
 ソース: [test.md](test.md)
+
+ソースコードに横からコメントを付けます。
+
+→ [プロジェクトページ](https://bitbucket.org/7shi/codecom)
+
 // コメントのテスト
 
 # テスト1
 ## テスト2
 ### テスト3
 
+preっぽいスタイルクラス
+
 ```
-a = init()
+.code {
 ----
-初期化
 ----
-if a <> 0 then
-	exit 1
+	float: left;
 ----
-初期化に失敗したらエラーで終了
-// コメントのテスト
+左回り込み。並べるのに使う。
+----
+	width: 47%;
+----
+適当に広げる
+----
+	border: 1px black solid;
+----
+枠を付ける
+----
+	font-family: monospace;
+----
+等幅フォント
+----
+	white-space: pre-wrap;
+----
+スペースを縮約せず、行端で折り返す
+----
+	tab-size: 4;
+----
+タブ間隔を4文字に指定
+----
+	-moz-tab-size: 4;
+----
+Firefox用
+----
+}
 ```
 
 ```
