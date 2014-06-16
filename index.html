@@ -68,7 +68,7 @@ function addText() {
 
 var curline = 0, lines = readFile("test.md").split('\n');
 for (; curline < lines.length; ++curline) {
-	var line = escape(lines[curline]);
+	var line = escape(lines[curline]), tmp;
 	if (line == "```") {
 		addText();
 		++curline;
@@ -77,6 +77,9 @@ for (; curline < lines.length; ++curline) {
 		addText();
 	} else if (line.startsWith("//")) {
 		// skip
+	} else if ((tmp = line.match(/^(#+) *(.*)/))) {
+		addText();
+		addHTML("h" + tmp[1].length, convLink(tmp[2]));
 	} else {
 		if (text != "") text += "<br>";
 		text += convLink(line);
