@@ -45,16 +45,9 @@
 </svg>
 
 <script type="text/javascript">
-var body = document.getElementById("body"),
-		div,
-			code,
-				sl,
-				linediv,
-			svg,
-			comments,
-				comment,
-					comdiv;
-var arrows = []
+var body = document.getElementById("body");
+var backs = [ "#f0f0f0", "#e0e0ff" ];
+var arrows = [];
 
 body.onresize = function() {
 	for (var i = 0; i < arrows.length; ++i) {
@@ -62,19 +55,36 @@ body.onresize = function() {
 	}
 };
 
-var backs = [ "#f0f0f0", "#e0e0ff" ];
-var lines = readFile("test.md").split('\n');
-var iscode, backno = 0;
+var curline = 0, lines = readFile("test.md").split('\n');
+for (; curline < lines.length; ++curline) {
+	readCode();
+}
 
-function addArrow() {
-	if (!sl || !comment) return;
-	var h = max(code.clientHeight, comments.clientHeight);
-	svg.setAttribute("height", h + "px");
-	var arr = document.createElementNS("http://www.w3.org/2000/svg", "path");
-	arr.setAttribute("stroke", "black");
-	arr.setAttribute("marker-end", "url(#arrow)");
-	arr.layout = function(code, sl, linediv, comments, comment) {
-		return function() {
+function readCode() {
+	var div = document.createElement("div"),
+			code = document.createElement("div"),
+				sl,
+				linediv,
+			svg = document.createElementNS("http://www.w3.org/2000/svg", "svg"),
+			comments = document.createElement("div"),
+				comment,
+					comdiv;
+	div.className = "divcode";
+	code.className = "code";
+	svg.setAttribute("class", "arrow");
+	comments.className = "comments";
+	div.appendChild(code);
+	div.appendChild(svg);
+	div.appendChild(comments);
+	body.appendChild(div);
+
+	function addArrow(sl, linediv, comment) {
+		var h = max(code.clientHeight, comments.clientHeight);
+		svg.setAttribute("height", h + "px");
+		var arr = document.createElementNS("http://www.w3.org/2000/svg", "path");
+		arr.setAttribute("stroke", "black");
+		arr.setAttribute("marker-end", "url(#arrow)");
+		arr.layout = function() {
 			var x1 = comments.offsetLeft - (code.offsetLeft + code.offsetWidth) - 3;
 			var y1 = (comment.offsetTop + comment.offsetHeight / 2) | 0;
 			var y2 = ((sl.offsetTop + (linediv.offsetTop + linediv.offsetHeight)) / 2) | 0;
@@ -82,69 +92,45 @@ function addArrow() {
 			y2 -= code.offsetTop;
 			arr.setAttribute("d", "M" + x1 + "," + y1 + " L0," + y2);
 		};
-	}(code, sl, linediv, comments, comment);
-	arr.layout();
-	svg.appendChild(arr);
-	arrows.push(arr);
-}
-
-for (var i = 0; i <= lines.length; ++i) {
-	if (i == lines.length || lines[i] == "") {
-		if (comment && sl) addArrow();
-		div = undefined;
-		continue;
+		arr.layout();
+		svg.appendChild(arr);
+		arrows.push(arr);
 	}
-	if (!div) {
-		div = document.createElement("div");
-		div.className = "divcode";
-		body.appendChild(div);
 
-		code = document.createElement("div");
-		code.className = "code";
-		div.appendChild(code);
-
-		svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-		svg.setAttribute("class", "arrow");
-		div.appendChild(svg);
-
-		comments = document.createElement("div");
-		comments.className = "comments";
-		div.appendChild(comments);
-
-		iscode = true;
-		backno = 0;
-		linediv = sl = null;
-	}
-	var line = escape(lines[i]);
-	if (line == "----") {
-		if (iscode) {
-			comment = null;
-		} else {
-			if (comment && sl) addArrow();
-			backno = 1 - backno;
-			linediv = sl = comment = null;
-		}
-		iscode = !iscode;
-	} else if (!iscode && line.substring(0, 2) == "//") {
-		// skip
-	} else {
-		if (iscode) {
-			linediv = document.createElement("div");
-			linediv.innerHTML = line;
-			linediv.style.backgroundColor = backs[backno];
-			code.appendChild(linediv);
-			if (!sl) sl = linediv;
-		} else {
-			if (!comment) {
-				comment = document.createElement("div");
-				comment.className = "comment";
-				comments.appendChild(comment);
+	var iscode = true, backno = 0;
+	for (; curline < lines.length && lines[curline] != ""; ++curline) {
+		var line = escape(lines[curline]);
+		if (line == "----") {
+			if (iscode) {
+				comment = null;
+			} else {
+				if (comment && sl) addArrow(sl, linediv, comment);
+				backno = 1 - backno;
+				linediv = sl = comment = null;
 			}
-			comdiv = document.createElement("div");
-			comdiv.innerHTML = convLink(line);
-			comment.appendChild(comdiv);
+			iscode = !iscode;
+		} else if (!iscode && line.substring(0, 2) == "//") {
+			// skip
+		} else {
+			if (iscode) {
+				linediv = document.createElement("div");
+				linediv.innerHTML = line;
+				linediv.style.backgroundColor = backs[backno];
+				code.appendChild(linediv);
+				if (!sl) sl = linediv;
+			} else {
+				if (!comment) {
+					comment = document.createElement("div");
+					comment.className = "comment";
+					comments.appendChild(comment);
+				}
+				comdiv = document.createElement("div");
+				comdiv.innerHTML = convLink(line);
+				comment.appendChild(comdiv);
+			}
 		}
 	}
+	if (comment && sl) addArrow(sl, linediv, comment);
 }
 
 function convLink(line) {
