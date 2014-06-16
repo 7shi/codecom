@@ -58,9 +58,7 @@ body.onresize = function() {
 var text = "";
 
 function addText() {
-	var p = document.createElement("p");
-	p.innerHTML = text;
-	body.appendChild(p);
+	addHTML("p", text);
 	text = "";
 }
 
@@ -151,6 +149,12 @@ function readCode() {
 		}
 	}
 	if (comment && sl) addArrow(sl, linediv, comment);
+}
+
+function addHTML(tag, html) {
+	var el = document.createElement(tag);
+	el.innerHTML = html;
+	body.appendChild(el);
 }
 
 function convLink(line) {
