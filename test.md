@@ -18,3 +18,4 @@ foo
 <&>
 ----
 エスケープのテスト
+[リンク](https://bitbucket.org/7shi/codecom)のテスト
