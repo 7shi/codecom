@@ -45,7 +45,14 @@
 </svg>
 
 <script type="text/javascript">
-var body = document.getElementById("body");
+var body = document.getElementById("body"),
+		div,
+			code,
+				sl,
+				linediv,
+			svg,
+			comdiv,
+				comment;
 var arrows = []
 
 body.onresize = function() {
@@ -56,7 +63,7 @@ body.onresize = function() {
 
 var backs = [ "#f0f0f0", "#e0e0ff" ];
 var lines = readFile("test.md").split('\n');
-var div, code, svg, comdiv, comment, iscode, linediv, sl, backno = 0;
+var iscode, backno = 0;
 
 function addArrow() {
 	if (!sl || !comment) return;
