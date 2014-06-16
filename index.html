@@ -45,6 +45,10 @@
 </svg>
 
 <script type="text/javascript">
+String.prototype.startsWith = function(s) {
+	return this.substring(0, s.length) == s;
+}
+
 var body = document.getElementById("body");
 var backs = [ "#f0f0f0", "#e0e0ff" ];
 var arrows = [];
@@ -127,7 +131,7 @@ function readCode() {
 				linediv = sl = comment = null;
 			}
 			iscode = !iscode;
-		} else if (!iscode && line.substring(0, 2) == "//") {
+		} else if (!iscode && line.startsWith("//")) {
 			// skip
 		} else {
 			if (iscode) {
