@@ -52,7 +52,8 @@ var body = document.getElementById("body"),
 				linediv,
 			svg,
 			comments,
-				comment;
+				comment,
+					comdiv;
 var arrows = []
 
 body.onresize = function() {
@@ -72,7 +73,7 @@ function addArrow() {
 	var arr = document.createElementNS("http://www.w3.org/2000/svg", "path");
 	arr.setAttribute("stroke", "black");
 	arr.setAttribute("marker-end", "url(#arrow)");
-	arr.layout = function(comments, code, comment, sl, linediv) {
+	arr.layout = function(code, sl, linediv, comments, comment) {
 		return function() {
 			var x1 = comments.offsetLeft - (code.offsetLeft + code.offsetWidth) - 3;
 			var y1 = (comment.offsetTop + comment.offsetHeight / 2) | 0;
@@ -81,7 +82,7 @@ function addArrow() {
 			y2 -= code.offsetTop;
 			arr.setAttribute("d", "M" + x1 + "," + y1 + " L0," + y2);
 		};
-	}(comments, code, comment, sl, linediv);
+	}(code, sl, linediv, comments, comment);
 	arr.layout();
 	svg.appendChild(arr);
 	arrows.push(arr);
@@ -89,6 +90,7 @@ function addArrow() {
 
 for (var i = 0; i <= lines.length; ++i) {
 	if (i == lines.length || lines[i] == "") {
+		if (comment && sl) addArrow();
 		div = undefined;
 		continue;
 	}
@@ -115,9 +117,12 @@ for (var i = 0; i <= lines.length; ++i) {
 	}
 	var line = lines[i];
 	if (line == "----") {
-		if (!iscode) {
+		if (iscode) {
+			comment = null;
+		} else {
+			if (comment && sl) addArrow();
 			backno = 1 - backno;
-			linediv = sl = null;
+			linediv = sl = comment = null;
 		}
 		iscode = !iscode;
 	} else if (!iscode && line.substring(0, 2) == "//") {
@@ -130,11 +135,14 @@ for (var i = 0; i <= lines.length; ++i) {
 			code.appendChild(linediv);
 			if (!sl) sl = linediv;
 		} else {
-			comment = document.createElement("div");
-			comment.className = "comment";
-			comment.innerHTML = line;
-			comments.appendChild(comment);
-			if (sl) addArrow();
+			if (!comment) {
+				comment = document.createElement("div");
+				comment.className = "comment";
+				comments.appendChild(comment);
+			}
+			comdiv = document.createElement("div");
+			comdiv.innerHTML = line;
+			comment.appendChild(comdiv);
 		}
 	}
 }
