@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<head>
+<title>Code Comment</title>
+</head>
+<body id="body">
+
+<style type="text/css">
+.divcode {
+	margin: 2px;
+	overflow: hidden;
+}
+.code {
+	float: left;
+	width: 45%;
+	border: 1px black solid;
+	font-family: monospace;
+	white-space: pre-wrap;
+	tab-size: 4;
+}
+.arrow {
+	float: left;
+	width: 10%;
+	margin: 1px;
+}
+.comdiv {
+	width: 44%;
+	float: left;
+}
+.comment {
+	width: 100%;
+	margin: 1px;
+	border: 1px black solid;
+}
+</style>
+
+<script type="text/javascript">
+var body = document.getElementById("body");
+
+var lines = readFile("test.md").split('\n');
+var div, code, svg, comdiv, iscode;
+for (var i = 0; i <= lines.length; ++i) {
+	if (i == lines.length || lines[i] == "") {
+		if (div) {
+			body.appendChild(div);
+			var w = max(code.clientHeight, comdiv.clientHeight);
+			svg.setAttribute("height", w + "px");
+		}
+		div = undefined;
+		continue;
+	}
+	if (!div) {
+		div = document.createElement("div");
+		div.className = "divcode";
+
+		code = document.createElement("div");
+		code.className = "code";
+		div.appendChild(code);
+
+		svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+		svg.setAttribute("class", "arrow");
+		div.appendChild(svg);
+
+		comdiv = document.createElement("div");
+		comdiv.className = "comdiv";
+		div.appendChild(comdiv);
+
+		iscode = true;
+	}
+	var line = lines[i];
+	if (line == "----") {
+		iscode = !iscode;
+	} else {
+		if (iscode) {
+			var linediv = document.createElement("div");
+			linediv.innerHTML = line;
+			code.appendChild(linediv);
+		} else {
+			var comment = document.createElement("div");
+			comment.className = "comment";
+			comment.innerHTML = line;
+			comdiv.appendChild(comment);
+		}
+	}
+}
+
+function max(a, b) {
+	return a > b ? a : b;
+}
+
+function readFile(name)
+{
+	var xhr = window.ActiveXObject ?
+		new ActiveXObject("Msxml2.XMLHTTP") : new XMLHttpRequest();
+	xhr.open("GET", name, false);
+	xhr.send("");
+	return xhr.responseText;
+}
+</script>
+</body>
+</html>
