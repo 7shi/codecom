@@ -45,6 +45,14 @@
 
 <script type="text/javascript">
 var body = document.getElementById("body");
+var arrows = []
+
+body.onresize = function() {
+	for (var i = 0; i < arrows.length; ++i) {
+		arrows[i].layout();
+	}
+};
+
 var backs = [ "#f0f0f0", "#e0e0ff" ];
 var lines = readFile("test.md").split('\n');
 var div, code, svg, comdiv, comment, iscode, linediv, sl, backno = 0;
@@ -68,6 +76,7 @@ function addArrow() {
 	}(comdiv, code, comment, sl, linediv);
 	arr.layout();
 	svg.appendChild(arr);
+	arrows.push(arr);
 }
 
 for (var i = 0; i <= lines.length; ++i) {
