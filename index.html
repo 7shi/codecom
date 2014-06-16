@@ -55,18 +55,30 @@ body.onresize = function() {
 	}
 };
 
+var text = "";
+
+function addText() {
+	var p = document.createElement("p");
+	p.innerHTML = text;
+	body.appendChild(p);
+	text = "";
+}
+
 var curline = 0, lines = readFile("test.md").split('\n');
 for (; curline < lines.length; ++curline) {
 	var line = escape(lines[curline]);
 	if (line == "```") {
+		addText();
 		++curline;
 		readCode();
+	} else if (line == "") {
+		addText();
 	} else {
-		var div = document.createElement("div");
-		div.innerHTML = convLink(line);
-		body.appendChild(div);
+		if (text != "") text += "<br>";
+		text += convLink(line);
 	}
 }
+addText();
 
 function readCode() {
 	var div = document.createElement("div"),
