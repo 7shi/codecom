@@ -75,6 +75,8 @@ for (; curline < lines.length; ++curline) {
 		readCode();
 	} else if (line == "") {
 		addText();
+	} else if (line.startsWith("//")) {
+		// skip
 	} else {
 		if (text != "") text += "<br>";
 		text += convLink(line);
