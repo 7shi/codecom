@@ -45,6 +45,8 @@
 </svg>
 
 <script type="text/javascript">
+var src = "test.md";
+
 String.prototype.startsWith = function(s) {
 	return this.substring(0, s.length) == s;
 }
@@ -66,7 +68,11 @@ function addText() {
 	text = "";
 }
 
-var curline = 0, lines = readFile("test.md").split('\n');
+addHTML("div", "<a href=\"https://bitbucket.org/7shi/codecom\">Code Comment</a>").style.cssFloat = "right";
+addHTML("div", "<a href=\"" + src + "\">ソース</a>");
+body.appendChild(document.createElement("hr"));
+
+var curline = 0, lines = readFile(src).split('\n');
 for (; curline < lines.length; ++curline) {
 	var line = escape(lines[curline]), tmp;
 	if (line == "```") {
@@ -164,6 +170,7 @@ function addHTML(tag, html) {
 	var el = document.createElement(tag);
 	el.innerHTML = html;
 	body.appendChild(el);
+	return el;
 }
 
 function convLink(line) {

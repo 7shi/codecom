@@ -1,8 +1,4 @@
-ソース: [test.md](test.md)
-
 ソースコードに横からコメントを付けます。
-
-→ [プロジェクトページ](https://bitbucket.org/7shi/codecom)
 
 // コメントのテスト
 
