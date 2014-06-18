@@ -95,12 +95,22 @@ function addText() {
 addHTML(menu, "span",
 	ahref(srcurl + "/" + src, "ソース") + "(" + ahref(src, "raw") + ")");
 
-var curline = 0, lines = readFile(src).split('\n');
-for (; curline < lines.length; ++curline) {
-	var line = escape(lines[curline]), tmp;
+var linenum = 0, curline, lines = readFile(src).split('\n');
+
+function readLine() {
+	if (linenum < lines.length) {
+		curline = lines[linenum++];
+		return true;
+	} else {
+		curline = undefined;
+		return false;
+	}
+}
+
+while (readLine()) {
+	var line = escape(curline), tmp;
 	if (line == "```") {
 		addText();
-		++curline;
 		readCode();
 	} else if (line == "") {
 		addText();
@@ -154,8 +164,8 @@ function readCode() {
 	}
 
 	var iscode = true, backno = 0;
-	for (; curline < lines.length && lines[curline] != "```"; ++curline) {
-		var line = escape(lines[curline]);
+	while (readLine() && curline != "```") {
+		var line = escape(curline);
 		if (line == "----") {
 			if (iscode) {
 				comment = null;
