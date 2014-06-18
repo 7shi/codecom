@@ -117,6 +117,28 @@ while (readLine()) {
 		readCode();
 	} else if (line == "") {
 		addText();
+	} else if (line.startsWith("*")) {
+		var lv = 0, lv2, ul = addHTML(body, "ul"), lvs = [[0, ul]];
+		--linenum;
+		while (readLine()) {
+			line = escape(curline);
+			if ((tmp = line.match(/^( *)\* *(.*)/))) {
+				lv2 = tmp[1].length / 4;
+				if (lv < lv2) {
+					lvs.push([lv = lv2, ul = addHTML(ul, "ul")]);
+				} else {
+					while (lv > lv2) {
+						var tmp2 = lvs.pop();
+						lv = tmp2[0];
+						ul = tmp2[1];
+					}
+				}
+				addHTML(ul, "li", convLink(tmp[2]));
+			} else {
+				--linenum;
+				break;
+			}
+		}
 	} else if (line.startsWith("//")) {
 		// skip
 	} else if ((tmp = line.match(/^(#+) *(.*)/))) {
@@ -208,7 +230,7 @@ function ahref(link, text) {
 
 function addHTML(parent, tag, html) {
 	var el = document.createElement(tag);
-	el.innerHTML = html;
+	if (html) el.innerHTML = html;
 	parent.appendChild(el);
 	return el;
 }
