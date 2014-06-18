@@ -58,7 +58,7 @@ String.prototype.startsWith = function(s) {
 	return this.substring(0, s.length) == s;
 }
 
-var query = {}
+var query = {};
 if (location.search.startsWith("?")) {
 	var query = {};
 	var list = location.search.substring(1).split("&");
