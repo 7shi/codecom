@@ -117,11 +117,11 @@ while (readLine()) {
 		readCode();
 	} else if (line == "") {
 		addText();
-	} else if (line.startsWith("*")) {
-		--linenum;
-		addUl(body, 0, "ul");
 	} else if (line.startsWith("//")) {
 		// skip
+	} else if ((tmp = line.match(/^( *)(\*|\d+\.) *(.*)/))) {
+		--linenum;
+		addUlOl(body, (tmp[1].length / 4) | 0, tmp[2] == "*" ? "ul" : "ol");
 	} else if ((tmp = line.match(/^(#+) *(.*)/))) {
 		addText();
 		addHTML(body, "h" + tmp[1].length, convLink(tmp[2]));
@@ -205,18 +205,21 @@ function readCode() {
 	if (comment && sl) addArrow(sl, linediv, comment);
 }
 
-function addUl(parent, lv, tag) {
+function addUlOl(parent, lv, tag) {
 	var parent = addHTML(parent, tag), tmp;
 	while (readLine()) {
 		line = escape(curline);
-		if (!(tmp = line.match(/^( *)\* *(.*)/))) break;
-		var lv2 = tmp[1].length / 4;
+		if (!(tmp = line.match(/^( *)(\*|\d+\.) *(.*)/))) break;
+		var tag2 = tmp[2] == "*" ? "ul" : "ol";
+		var lv2 = (tmp[1].length / 4) | 0;
 		if (lv2 < lv) break;
 		if (lv2 > lv) {
 			--linenum;
-			addUl(parent, lv + 1, tag);
+			addUlOl(parent, lv + 1, tag2);
+		} else if (tag != tag2) {
+			break;
 		} else {
-			addHTML(parent, "li", convLink(tmp[2]));
+			addHTML(parent, "li", convLink(tmp[3]));
 		}
 	}
 	--linenum;
