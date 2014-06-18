@@ -53,12 +53,27 @@
 
 <script type="text/javascript">
 var srcurl = "https://bitbucket.org/7shi/7shi.bitbucket.org/src/tip/codecom";
-var src = "test.md";
 
 String.prototype.startsWith = function(s) {
 	return this.substring(0, s.length) == s;
 }
 
+var query = {}
+if (location.search.startsWith("?")) {
+	var query = {};
+	var list = location.search.substring(1).split("&");
+	for (var i = 0; i < list.length; ++i) {
+		var q = list[i];
+		var p = q.indexOf("=");
+		if (p < 0) {
+			query[q] = "";
+		} else {
+			query[q.substring(0, p)] = decodeURIComponent(q.substring(p + 1));
+		}
+	}
+}
+
+var src = query.src ? query.src : "test.md";
 var body = document.getElementById("body");
 var menu = document.getElementById("menu");
 var backs = [ "#f0f0f0", "#e0e0ff" ];
