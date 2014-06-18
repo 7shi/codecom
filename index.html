@@ -44,6 +44,13 @@
 </defs>
 </svg>
 
+<div id="menu" style="overflow:hidden">
+<div style="float:right">
+<a href="https://bitbucket.org/7shi/codecom">Code Comment</a>
+</div>
+</div>
+<hr />
+
 <script type="text/javascript">
 var src = "test.md";
 
@@ -52,6 +59,7 @@ String.prototype.startsWith = function(s) {
 }
 
 var body = document.getElementById("body");
+var menu = document.getElementById("menu");
 var backs = [ "#f0f0f0", "#e0e0ff" ];
 var arrows = [];
 
@@ -68,9 +76,7 @@ function addText() {
 	text = "";
 }
 
-addHTML(body, "div", "<a href=\"https://bitbucket.org/7shi/codecom\">Code Comment</a>").style.cssFloat = "right";
-addHTML(body, "div", "<a href=\"" + src + "\">ソース</a>");
-body.appendChild(document.createElement("hr"));
+addHTML(menu, "span", "<a href=\"" + src + "\">ソース</a>");
 
 var curline = 0, lines = readFile(src).split('\n');
 for (; curline < lines.length; ++curline) {
