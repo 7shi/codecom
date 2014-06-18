@@ -76,7 +76,7 @@ function addText() {
 	text = "";
 }
 
-addHTML(menu, "span", "<a href=\"" + src + "\">ソース</a>");
+addHTML(menu, "span", ahref(src, "ソース"));
 
 var curline = 0, lines = readFile(src).split('\n');
 for (; curline < lines.length; ++curline) {
@@ -170,6 +170,10 @@ function readCode() {
 		}
 	}
 	if (comment && sl) addArrow(sl, linediv, comment);
+}
+
+function ahref(link, text) {
+	return "<a href=\"" + link + "\">" + text + "</a>";
 }
 
 function addHTML(parent, tag, html) {
