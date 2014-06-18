@@ -119,6 +119,8 @@ while (readLine()) {
 		addText();
 	} else if (line.startsWith("//")) {
 		// skip
+	} else if (line.startsWith("---")) {
+		addHTML(body, "hr");
 	} else if ((tmp = line.match(/^( *)(\*|\d+\.) *(.*)/))) {
 		--linenum;
 		addUlOl(body, (tmp[1].length / 4) | 0, tmp[2] == "*" ? "ul" : "ol");
