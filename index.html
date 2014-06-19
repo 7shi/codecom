@@ -139,21 +139,19 @@ function readCode() {
 			code = addHTML(div, "div"),
 				sl,
 				linediv,
-			svg = document.createElementNS("http://www.w3.org/2000/svg", "svg"),
-			comments = document.createElement("div"),
+			svg = addSVG(div, "svg"),
+			comments = addHTML(div, "div"),
 				comment,
 					comdiv;
 	div.className = "divcode";
 	code.className = "code";
 	svg.setAttribute("class", "arrow");
 	comments.className = "comments";
-	div.appendChild(svg);
-	div.appendChild(comments);
 
 	function addArrow(sl, linediv, comment) {
 		var h = max(code.clientHeight, comments.clientHeight);
 		svg.setAttribute("height", h + "px");
-		var arr = document.createElementNS("http://www.w3.org/2000/svg", "path");
+		var arr = addSVG(svg, "path");
 		arr.setAttribute("stroke", "black");
 		arr.setAttribute("marker-end", "url(#arrow)");
 		arr.layout = function() {
@@ -165,7 +163,6 @@ function readCode() {
 			arr.setAttribute("d", "M" + x1 + "," + y1 + " L0," + y2);
 		};
 		arr.layout();
-		svg.appendChild(arr);
 		arrows.push(arr);
 	}
 
@@ -228,6 +225,12 @@ function ahref(link, text) {
 function addHTML(parent, tag, html) {
 	var ret = document.createElement(tag);
 	if (html) ret.innerHTML = html;
+	parent.appendChild(ret);
+	return ret;
+}
+
+function addSVG(parent, tag) {
+	var ret = document.createElementNS("http://www.w3.org/2000/svg", tag);
 	parent.appendChild(ret);
 	return ret;
 }
