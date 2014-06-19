@@ -135,8 +135,8 @@ while (readLine()) {
 addText();
 
 function readCode() {
-	var div = document.createElement("div"),
-			code = document.createElement("div"),
+	var div = addHTML(body, "div"),
+			code = addHTML(div, "div"),
 				sl,
 				linediv,
 			svg = document.createElementNS("http://www.w3.org/2000/svg", "svg"),
@@ -147,10 +147,8 @@ function readCode() {
 	code.className = "code";
 	svg.setAttribute("class", "arrow");
 	comments.className = "comments";
-	div.appendChild(code);
 	div.appendChild(svg);
 	div.appendChild(comments);
-	body.appendChild(div);
 
 	function addArrow(sl, linediv, comment) {
 		var h = max(code.clientHeight, comments.clientHeight);
@@ -187,20 +185,16 @@ function readCode() {
 			// skip
 		} else {
 			if (iscode) {
-				linediv = document.createElement("div");
+				linediv = addHTML(code, "div");
 				linediv.innerHTML = line;
 				linediv.style.backgroundColor = backs[backno];
-				code.appendChild(linediv);
 				if (!sl) sl = linediv;
 			} else {
 				if (!comment) {
-					comment = document.createElement("div");
+					comment = addHTML(comments, "div");
 					comment.className = "comment";
-					comments.appendChild(comment);
 				}
-				comdiv = document.createElement("div");
-				comdiv.innerHTML = convLink(line);
-				comment.appendChild(comdiv);
+				comdiv = addHTML(comment, "div", convLink(line));
 			}
 		}
 	}
