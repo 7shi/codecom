@@ -91,11 +91,11 @@ body.onresize = function() {
 var text = "";
 
 function addText() {
-	addHTML(body, "p", text);
+	addHTML(body, "p", "", text);
 	text = "";
 }
 
-addHTML(menu, "span",
+addHTML(menu, "span", "",
 	ahref(srcurl + "/" + src, "ソース") + "(" + ahref(src, "raw") + ")");
 
 var linenum = 0, curline, lines = readFile(src).split('\n');
@@ -126,7 +126,7 @@ while (readLine()) {
 		addUlOl(body, (tmp[1].length / 4) | 0, tmp[2] == "*" ? "ul" : "ol");
 	} else if ((tmp = line.match(/^(#+) *(.*)/))) {
 		addText();
-		addHTML(body, "h" + tmp[1].length, convLink(tmp[2]));
+		addHTML(body, "h" + tmp[1].length, "", convLink(tmp[2]));
 	} else {
 		if (text != "") text += "<br>";
 		text += convLink(line);
@@ -135,18 +135,14 @@ while (readLine()) {
 addText();
 
 function readCode() {
-	var div = addHTML(body, "div"),
-			code = addHTML(div, "div"),
+	var div = addHTML(body, "div", "divcode"),
+			code = addHTML(div, "div", "code"),
 				sl,
 				linediv,
-			svg = addSVG(div, "svg"),
-			comments = addHTML(div, "div"),
+			svg = addSVG(div, "svg", "arrow"),
+			comments = addHTML(div, "div", "comments"),
 				comment,
 					comdiv;
-	div.className = "divcode";
-	code.className = "code";
-	svg.setAttribute("class", "arrow");
-	comments.className = "comments";
 
 	function addArrow(sl, linediv, comment) {
 		var h = max(code.clientHeight, comments.clientHeight);
@@ -182,16 +178,14 @@ function readCode() {
 			// skip
 		} else {
 			if (iscode) {
-				linediv = addHTML(code, "div");
-				linediv.innerHTML = line;
+				linediv = addHTML(code, "div", "", line);
 				linediv.style.backgroundColor = backs[backno];
 				if (!sl) sl = linediv;
 			} else {
 				if (!comment) {
-					comment = addHTML(comments, "div");
-					comment.className = "comment";
+					comment = addHTML(comments, "div", "comment");
 				}
-				comdiv = addHTML(comment, "div", convLink(line));
+				comdiv = addHTML(comment, "div", "", convLink(line));
 			}
 		}
 	}
@@ -212,7 +206,7 @@ function addUlOl(parent, lv, tag) {
 		} else if (tag != tag2) {
 			break;
 		} else {
-			addHTML(parent, "li", convLink(tmp[3]));
+			addHTML(parent, "li", "", convLink(tmp[3]));
 		}
 	}
 	--linenum;
@@ -222,15 +216,17 @@ function ahref(link, text) {
 	return "<a href=\"" + link + "\">" + text + "</a>";
 }
 
-function addHTML(parent, tag, html) {
+function addHTML(parent, tag, className, html) {
 	var ret = document.createElement(tag);
+	if (className) ret.className = className;
 	if (html) ret.innerHTML = html;
 	parent.appendChild(ret);
 	return ret;
 }
 
-function addSVG(parent, tag) {
+function addSVG(parent, tag, className) {
 	var ret = document.createElementNS("http://www.w3.org/2000/svg", tag);
+	if (className) ret.setAttribute("class", className);
 	parent.appendChild(ret);
 	return ret;
 }
