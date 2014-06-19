@@ -232,10 +232,10 @@ function ahref(link, text) {
 }
 
 function addHTML(parent, tag, html) {
-	var el = document.createElement(tag);
-	if (html) el.innerHTML = html;
-	parent.appendChild(el);
-	return el;
+	var ret = document.createElement(tag);
+	if (html) ret.innerHTML = html;
+	parent.appendChild(ret);
+	return ret;
 }
 
 function convLink(line) {
