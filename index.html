@@ -91,14 +91,16 @@ body.onresize = function() {
 var text = "";
 
 function addText() {
-	addHTML(body, "p", "", text);
-	text = "";
+	if (text != "") {
+		addHTML(body, "p", "", text);
+		text = "";
+	}
 }
 
 addHTML(menu, "span", "",
 	ahref(srcurl + "/" + src, "ソース") + "(" + ahref(src, "raw") + ")");
 
-var linenum = 0, curline, lines = readFile(src).split('\n');
+var linenum = 0, curline, lines = readFile(src).replace(/\r\n/g, "\n").split("\n");
 
 function readLine() {
 	if (linenum < lines.length) {
@@ -120,16 +122,18 @@ while (readLine()) {
 	} else if (line.startsWith("//")) {
 		// skip
 	} else if (line.startsWith("---")) {
+		addText();
 		addHTML(body, "hr");
 	} else if ((tmp = line.match(/^( *)(\*|\d+\.) *(.*)/))) {
 		--linenum;
+		addText();
 		addUlOl(body, (tmp[1].length / 4) | 0, tmp[2] == "*" ? "ul" : "ol");
 	} else if ((tmp = line.match(/^(#+) *(.*)/))) {
 		addText();
 		addHTML(body, "h" + tmp[1].length, "", convLink(tmp[2]));
 	} else {
 		if (text != "") text += "<br>";
-		text += convLink(line);
+		if (line != "") text += convLink(line);
 	}
 }
 addText();
@@ -240,9 +244,9 @@ function convLink(line) {
 
 function escape(line) {
 	return line
-		.replace("&", "&amp;")
-		.replace("<", "&lt;")
-		.replace(">", "&gt;");
+		.replace(/&/g, "&amp;")
+		.replace(/</g, "&lt;")
+		.replace(/>/g, "&gt;");
 }
 
 function max(a, b) {
